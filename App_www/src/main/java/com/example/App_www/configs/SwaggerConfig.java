@@ -1,0 +1,35 @@
+package com.example.App_www.configs;
+
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.models.GroupedOpenApi;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SwaggerConfig {
+    private static final String[] WHITELIST = {
+            "/api/**",
+            "/auth/**",
+    };
+    @Bean
+    GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder().group("public-api").pathsToMatch(WHITELIST).build();
+    }
+
+    @Bean
+    OpenAPI customOpenAPI() {
+        return new OpenAPI().info(
+                        new Info().title("Aplikacja WWW Dla Trenerow API")
+                                .version("1.0.0").description("Api App_www aplication"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(
+                        new Components().addSecuritySchemes("bearerAuth", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP).type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer").bearerFormat("JWT")));
+    }
+}
